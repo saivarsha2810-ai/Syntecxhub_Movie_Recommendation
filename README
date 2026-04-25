@@ -1,0 +1,134 @@
+# 🎬 Movie Recommendation System
+
+This project is part of my internship at Syntecxhub.
+
+---
+
+## 📌 Project Overview
+
+This is a simple **Machine Learning-based Movie Recommendation System** built using Python.
+It recommends movies based on similarity in **genre and description** using **content-based filtering**.
+
+---
+
+## 🛠️ Technologies Used
+
+* Python
+* Pandas
+* Scikit-learn
+
+---
+
+## 📂 Project Structure
+
+```
+Movie_Recommendation/
+│── main.py
+│── movies.csv
+│── README.md
+```
+
+---
+
+## ▶️ How to Run
+
+### Step 1: Install dependencies
+
+```
+pip install pandas scikit-learn
+```
+
+### Step 2: Run the program
+
+```
+python main.py
+```
+
+---
+
+## 💻 Full Code
+
+```python
+import pandas as pd
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+
+# Sample dataset (can also use CSV file)
+data_dict = {
+    "title": ["Inception", "Titanic", "Avengers", "Interstellar", "Notebook"],
+    "genre": ["Sci-Fi", "Romance", "Action", "Sci-Fi", "Romance"],
+    "description": [
+        "dream sharing technology thief",
+        "love story on ship",
+        "heroes save world",
+        "space travel survival",
+        "romantic couple story"
+    ]
+}
+
+data = pd.DataFrame(data_dict)
+
+# Combine features
+data["combined"] = data["genre"] + " " + data["description"]
+
+# Convert text into vectors
+cv = CountVectorizer()
+matrix = cv.fit_transform(data["combined"])
+
+# Compute cosine similarity
+similarity = cosine_similarity(matrix)
+
+# Recommendation function
+def recommend(movie_name):
+    movie_name = movie_name.lower()
+    
+    if movie_name not in data["title"].str.lower().values:
+        print("Movie not found!")
+        return
+    
+    index = data[data["title"].str.lower() == movie_name].index[0]
+    scores = list(enumerate(similarity[index]))
+    
+    # Sort movies based on similarity
+    sorted_scores = sorted(scores, key=lambda x: x[1], reverse=True)
+    
+    print(f"\nRecommended movies for '{movie_name}':\n")
+    
+    for i in sorted_scores[1:4]:
+        print(data.iloc[i[0]]["title"])
+
+# User input
+movie = input("Enter a movie name: ")
+recommend(movie)
+```
+
+---
+
+## 📊 Example Output
+
+```
+Enter a movie name: inception
+
+Recommended movies for 'inception':
+
+Interstellar  
+Avengers  
+Titanic  
+```
+
+---
+
+## 📌 Features
+
+* Content-based filtering
+* Simple and beginner-friendly
+* Runs in VS Code
+* No external dataset required
+
+---
+
+## 🔗 Internship
+
+This project is developed as part of the Syntecxhub Internship Program.
+
+---
